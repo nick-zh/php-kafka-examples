@@ -10,11 +10,16 @@ use RdKafka\TopicConf;
 error_reporting(E_ALL);
 
 $conf = new Conf();
+// will be visible in broker logs
+$conf->set('client.id', 'pure-php-producer');
 // set broker
-$conf->set('metadata.broker.list', 'kafka:9097');
-// set compression
-$conf->set('compression.codec', 'gzip');
-
+$conf->set('metadata.broker.list', 'kafka:9096');
+// set compression (supported are: none,gzip,lz4,snappy,zstd)
+$conf->set('compression.codec', 'snappy');
+// set timeout, producer will retry for 5s
+$conf->set('message.timeout.ms', '5000');
+//If you need to produce exactly once and want to keep the original produce order, uncomment the line below
+//$conf->set('enable.idempotence', 'true');
 
 // SASL Authentication
 //$conf->set('sasl.mechanisms', '');
@@ -29,26 +34,40 @@ $conf->set('compression.codec', 'gzip');
 //$conf->set('ssl.key.location', __DIR__.'/../keys/kafka.key');
 
 $producer = new Producer($conf);
-// Set the topic configuration:
-$topicConfig = new TopicConf();
-// Set timout for trying to produce the message
-$topicConfig->set('message.timeout.ms', 5000);
 // initialize producer topic
-$topic = $producer->newTopic('test-topic', $topicConfig);
+$topic = $producer->newTopic('pure-php-test-topic');
+// Produce 10 test messages
+$amountTestMessages = 10;
 
-try {
-    while(true) {
-        // Let the partitioner decide the target partition
-        $partition = RD_KAFKA_PARTITION_UA;
-        //produce message with payload, key and headers
-        $topic->producev($partition, 0, 'test message','test-key', ['some' => 'header value']);
+// Loop to produce some test messages
+for ($i = 0; $i < $amountTestMessages; ++$i) {
+    // Let the partitioner decide the target partition, default partitioner is: RD_KAFKA_MSG_PARTITIONER_CONSISTENT_RANDOM
+    // You can use a predefined partitioner or write own logic to decide the target partition
+    $partition = RD_KAFKA_PARTITION_UA;
 
-        // Trigger producer callbacks, to handle errors, etc.
-        while ($producer->getOutQLen() > 0) {
-            $producer->poll(100);
-        }
-    }
-} catch (\RuntimeException $e) {
-    echo 'ERROR: ' , $e->getMessage() , ' (code: ' , $e->getCode() , ')' , PHP_EOL;
-    exit;
+    //produce message with payload, key and headers
+    $topic->producev(
+        $partition,
+        RD_KAFKA_MSG_F_BLOCK, // will block produce if queue is full
+        sprintf('test message-%d',$i),
+        sprintf('test-key-%d', $i),
+        [
+            'some' => sprintf('header value %d', $i)
+        ]
+    );
+    echo sprintf('Queued message number: %d', $i) . PHP_EOL;
+
+    // Poll for events e.g. producer callbacks, to handle errors, etc.
+    // 0 = non-blocking
+    // -1 = blocking
+    // any other int value = timeout in ms
+    $producer->poll(0);
 }
+
+// Shutdown producer, flush messages that are in queue. Give up after 20s
+$result = $producer->flush(20000);
+
+if (RD_KAFKA_RESP_ERR_NO_ERROR !== $result) {
+    echo 'Was not able to shutdown within 20s. Messages might be lost!' . PHP_EOL;
+}
+

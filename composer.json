@@ -1,6 +1,9 @@
 {
   "require": {
-    "ext-json": "*"
+    "ext-json": "*",
+    "jobcloud/php-console-kafka-schema-registry": "^1.0",
+    "jobcloud/php-kafka-lib": "^0.1",
+    "ramsey/uuid": "^4.0"
   },
   "require-dev": {
     "kwn/php-rdkafka-stubs": "^1.2.0"
