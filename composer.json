@@ -1,6 +1,7 @@
 {
   "require": {
-    "ext-json": "*"
+    "ext-json": "*",
+    "jobcloud/php-kafka-lib": "^0.1"
   },
   "require-dev": {
     "kwn/php-rdkafka-stubs": "^1.2.0"
