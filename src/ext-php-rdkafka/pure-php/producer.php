@@ -55,7 +55,7 @@ for ($i = 0; $i < $amountTestMessages; ++$i) {
             'some' => sprintf('header value %d', $i)
         ]
     );
-    echo sprintf('Successfully sent message number: %d', $i);
+    echo sprintf('Queued message number: %d', $i) . PHP_EOL;
 
     // Poll for events e.g. producer callbacks, to handle errors, etc.
     // 0 = non-blocking

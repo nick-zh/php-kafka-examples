@@ -27,9 +27,9 @@ $conf->set('enable.partition.eof', 'true');
 
 // SSL Authentication
 //$conf->set('security.protocol', 'ssl');
-//$conf->set('ssl.ca.location', __DIR__.'/../keys/ca.pem');
-//$conf->set('ssl.certificate.location', __DIR__.'/../keys/kafka.cert');
-//$conf->set('ssl.key.location', __DIR__.'/../keys/kafka.key');
+//$conf->set('ssl.ca.location', __DIR__.'/../../../keys/ca.pem');
+//$conf->set('ssl.certificate.location', __DIR__.'/../../../keys/kafka.cert');
+//$conf->set('ssl.key.location', __DIR__.'/../../../keys/kafka.key');
 
 // Create high level consumer
 $consumer = new KafkaConsumer($conf);
