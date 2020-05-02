@@ -18,6 +18,8 @@ $conf->set('metadata.broker.list', 'kafka:9096');
 $conf->set('compression.codec', 'snappy');
 // set timeout, producer will retry for 5s
 $conf->set('message.timeout.ms', '5000');
+//If you need to produce exactly once and want to keep the original produce order, uncomment the line below
+//$conf->set('enable.idempotence', 'true');
 
 // SASL Authentication
 //$conf->set('sasl.mechanisms', '');
