@@ -15,3 +15,16 @@ docker-compose up -d
 docker-compose exec php bash
 ```
 Then follow the instructions in the example folders.
+
+## Customize to fit your setup
+If you wan't to test / debug something that is closer to your setup,  
+you can modify the following arguments in `docker-compose.yml`:
+```
+PHP_IMAGE_TAG: 7.4-cli-alpine3.11
+LIBRDKAFKA_VERSION: v1.4.0
+PHP_RDKAFKA_VERSION: 4.0.3
+```
+Adjust those, to reflect your setup and afterwards run:
+```
+docker-compose up --build -d
+```

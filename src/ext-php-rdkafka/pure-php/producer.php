@@ -1,7 +1,5 @@
 <?php
 
-require_once('../../../vendor/autoload.php');
-
 use RdKafka\Conf;
 use RdKafka\Message;
 use RdKafka\Producer;
@@ -21,11 +19,29 @@ $conf->set('message.timeout.ms', '5000');
 //If you need to produce exactly once and want to keep the original produce order, uncomment the line below
 //$conf->set('enable.idempotence', 'true');
 
+// This callback processes the delivery reports from the broker
+// you can see if your message was truly sent
+$conf->setDrMsgCb(function (Producer $kafka, Message $message) {
+    if ($message->err) {
+        $errorStr = rd_kafka_err2str($message->err);
+
+        echo sprintf('Message FAILED (%s, %s) to send with payload => %s', $message->err, $errorStr, $message->payload) . PHP_EOL;
+    } else {
+        // message successfully delivered
+        echo sprintf('Message sent SUCCESSFULLY with payload => %s', $message->payload) . PHP_EOL;
+    }
+});
+
 // SASL Authentication
-//$conf->set('sasl.mechanisms', '');
-//$conf->set('ssl.endpoint.identification.algorithm', 'https');
-//$conf->set('sasl.username', '');
-//$conf->set('sasl.password', '');
+// can be SASL_PLAINTEXT, SASL_SSL
+$conf->set('security.protocol', '');
+// can be GSSAPI, PLAIN, SCRAM-SHA-256, SCRAM-SHA-512, OAUTHBEARER
+$conf->set('sasl.mechanisms', '');
+$conf->set('sasl.username', '');
+$conf->set('sasl.password', '');
+// default is none
+$conf->set('ssl.endpoint.identification.algorithm', 'https');
+
 
 // SSL Authentication
 //$conf->set('security.protocol', 'ssl');
@@ -70,4 +86,3 @@ $result = $producer->flush(20000);
 if (RD_KAFKA_RESP_ERR_NO_ERROR !== $result) {
     echo 'Was not able to shutdown within 20s. Messages might be lost!' . PHP_EOL;
 }
-
