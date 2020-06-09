@@ -34,13 +34,13 @@ $conf->setDrMsgCb(function (Producer $kafka, Message $message) {
 
 // SASL Authentication
 // can be SASL_PLAINTEXT, SASL_SSL
-$conf->set('security.protocol', '');
+// conf->set('security.protocol', '');
 // can be GSSAPI, PLAIN, SCRAM-SHA-256, SCRAM-SHA-512, OAUTHBEARER
-$conf->set('sasl.mechanisms', '');
-$conf->set('sasl.username', '');
-$conf->set('sasl.password', '');
+// $conf->set('sasl.mechanisms', '');
+// $conf->set('sasl.username', '');
+// $conf->set('sasl.password', '');
 // default is none
-$conf->set('ssl.endpoint.identification.algorithm', 'https');
+// $conf->set('ssl.endpoint.identification.algorithm', 'https');
 
 
 // SSL Authentication
