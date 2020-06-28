@@ -1,5 +1,7 @@
 <?php
 
+// DISCLAIMER: For most intent and purposes it is easier and more flexible to use the high level consumer
+
 require_once('../../../vendor/autoload.php');
 
 use RdKafka\Conf;
@@ -13,10 +15,12 @@ $conf->set('client.id', 'pure-php-low-level-consumer');
 $conf->set('group.id', 'pure-php-low-level-consumer');
 // set broker
 $conf->set('metadata.broker.list', 'kafka:9096');
+
 // don't auto commit, give the application the control to do that (default is: true)
 // this will give you control of the local offset store, which will be auto committed.
 // Low level consumer works a bit differently in this case
 $conf->set('enable.auto.offset.store', 'false');
+
 // Get eof code instead of null
 $conf->set('enable.partition.eof', 'true');
 

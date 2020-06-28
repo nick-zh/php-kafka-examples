@@ -1,5 +1,7 @@
 <?php
 
+// DISCLAIMER: this feature is not released yet and is subject to change
+
 use RdKafka\Conf;
 use RdKafka\Message;
 use RdKafka\Producer;

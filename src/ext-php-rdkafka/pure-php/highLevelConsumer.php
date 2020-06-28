@@ -60,6 +60,13 @@ while (true) {
         $message->partition,
         $message->offset
     ) . PHP_EOL;
+    // Here is where you do your business logic to process your message
+    // after you have done so, commit the message offset to the broker
 
+    // commit the message(s) offset synchronous back to the broker
     $consumer->commit($message);
+
+    // you can also commit the message(s) offset in an async manner, which is slightly faster
+    // but poses of course the challenge of handling errors in an async manner as well
+    //$consumer->commitAsync($message);
 }

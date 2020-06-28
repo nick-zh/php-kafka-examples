@@ -1,5 +1,7 @@
 <?php
 
+// DISCLAIMER: For most intent and purposes it is easier and more flexible to use the high level consumer
+
 require_once('../../../vendor/autoload.php');
 
 use Jobcloud\Kafka\Consumer\KafkaConsumerBuilder;

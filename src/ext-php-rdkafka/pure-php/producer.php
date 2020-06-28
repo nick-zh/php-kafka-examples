@@ -20,7 +20,7 @@ $conf->set('message.timeout.ms', '5000');
 //$conf->set('enable.idempotence', 'true');
 
 // This callback processes the delivery reports from the broker
-// you can see if your message was truly sent
+// you can see if your message was truly sent, this can be especially of importance if you poll async
 $conf->setDrMsgCb(function (Producer $kafka, Message $message) {
     if ($message->err) {
         $errorStr = rd_kafka_err2str($message->err);
