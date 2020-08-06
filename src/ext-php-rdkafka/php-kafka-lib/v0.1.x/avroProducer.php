@@ -1,6 +1,6 @@
 <?php
 
-require_once('../../../vendor/autoload.php');
+require_once('../../../../vendor/autoload.php');
 
 use FlixTech\AvroSerializer\Objects\RecordSerializer;
 use FlixTech\SchemaRegistryApi\Registry\BlockingRegistry;
@@ -33,17 +33,10 @@ $registry = new CachedRegistry(
 // Instantiate schema registry of lib (Note: In the future we will use our won cached registry)
 $schemaRegistry = new AvroSchemaRegistry($registry);
 // add schema for topic
-$schemaRegistry->addBodySchemaMappingForTopic(
+$schemaRegistry->addSchemaMappingForTopic(
     'php-kafka-lib-test-topic-avro',
     new KafkaAvroSchema(
         'nickzh.php.kafka.examples.entity.product-value'
-    // optional param - version: if not passed we will take latest
-    )
-);
-$schemaRegistry->addKeySchemaMappingForTopic(
-    'php-kafka-lib-test-topic-avro',
-    new KafkaAvroSchema(
-        'nickzh.php.kafka.examples.entity.product-key'
     // optional param - version: if not passed we will take latest
     )
 );

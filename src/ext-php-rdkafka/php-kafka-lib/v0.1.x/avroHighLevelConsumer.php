@@ -1,6 +1,6 @@
 <?php
 
-require_once('../../../vendor/autoload.php');
+require_once('../../../../vendor/autoload.php');
 
 use FlixTech\AvroSerializer\Objects\RecordSerializer;
 use FlixTech\SchemaRegistryApi\Exception\SchemaNotFoundException;
@@ -35,18 +35,11 @@ $registry = new CachedRegistry(
 // Instantiate schema registry of lib (Note: In the future we will use our won cached registry)
 $schemaRegistry = new AvroSchemaRegistry($registry);
 // add schema for topic
-$schemaRegistry->addBodySchemaMappingForTopic(
+$schemaRegistry->addSchemaMappingForTopic(
     'php-kafka-lib-test-topic-avro',
     new KafkaAvroSchema(
         'nickzh.php.kafka.examples.entity.product-value'
         // optional param - version: if not passed we will take latest
-    )
-);
-$schemaRegistry->addKeySchemaMappingForTopic(
-    'php-kafka-lib-test-topic-avro',
-    new KafkaAvroSchema(
-        'nickzh.php.kafka.examples.entity.product-key'
-    // optional param - version: if not passed we will take latest
     )
 );
 
@@ -82,6 +75,7 @@ $consumer = $builder->withAdditionalConfig(
         ]
     )
     ->withAdditionalBroker('kafka:9096')
+    ->withTimeout(10000)
     ->withConsumerGroup('php-kafka-lib-high-level-consumer-avro')
     ->withDecoder($decoder)
     ->withSubscription('php-kafka-lib-test-topic-avro')
@@ -91,7 +85,7 @@ $consumer->subscribe();
 
 while (true) {
     try {
-        $message = $consumer->consume(10000);
+        $message = $consumer->consume();
     } catch (KafkaConsumerTimeoutException|KafkaConsumerEndOfPartitionException $e) {
         continue;
     } catch (KafkaConsumerConsumeException $e) {

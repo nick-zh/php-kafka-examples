@@ -33,7 +33,6 @@ $consumer = $builder->withAdditionalConfig(
     ]
 )
     ->withAdditionalBroker('kafka:9096')
-    ->withTimeout(10000)
     ->withConsumerGroup('php-kafka-lib-high-level-consumer')
     ->withSubscription('php-kafka-lib-test-topic')
     ->build();
@@ -42,15 +41,12 @@ $consumer->subscribe();
 
 while (true) {
     try {
-        $message = $consumer->consume();
+        $message = $consumer->consume(10000);
     } catch (KafkaConsumerTimeoutException|KafkaConsumerEndOfPartitionException $e) {
         echo 'Didn\'t receive any messages, waiting for more...' . PHP_EOL;
         continue;
     } catch (KafkaConsumerConsumeException $e) {
         echo $e->getMessage() . PHP_EOL;
-        continue;
-    } catch (SchemaNotFoundException $e) {
-        echo 'Consumed message with no or unknown schema' . PHP_EOL;
         continue;
     }
 

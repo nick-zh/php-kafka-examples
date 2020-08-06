@@ -1,8 +1,6 @@
 <?php
 
-// DISCLAIMER: For most intent and purposes it is easier and more flexible to use the high level consumer
-
-require_once('../../../vendor/autoload.php');
+require_once('../../../../vendor/autoload.php');
 
 use Jobcloud\Kafka\Consumer\KafkaConsumerBuilder;
 use Jobcloud\Kafka\Exception\KafkaConsumerConsumeException;
@@ -18,10 +16,8 @@ $consumer = $builder->withAdditionalConfig(
         // start at the very beginning of the topic when reading for the first time
         'auto.offset.reset' => 'earliest',
 
-        // control how fast a commited offset will be synced to the broker
-        //'auto.commit.interval.ms' => 100,
         // will be visible in broker logs
-        'client.id' => 'php-kafka-lib-low-level-consumer',
+        'client.id' => 'php-kafka-lib-high-level-consumer',
 
         // SSL settings
         //'security.protocol' => 'ssl',
@@ -37,19 +33,16 @@ $consumer = $builder->withAdditionalConfig(
     ]
 )
     ->withAdditionalBroker('kafka:9096')
-    ->withConsumerGroup('php-kafka-lib-low-level-consumer')
-    ->withConsumerType(KafkaConsumerBuilder::CONSUMER_TYPE_LOW_LEVEL)
-    ->withSubscription(
-        'php-kafka-lib-test-topic'
-        // optional param - partitions: if none are given, we will query the topic and subscribe to all partitions, like the high level consumer
-    )
+    ->withTimeout(10000)
+    ->withConsumerGroup('php-kafka-lib-high-level-consumer')
+    ->withSubscription('php-kafka-lib-test-topic')
     ->build();
 
 $consumer->subscribe();
 
 while (true) {
     try {
-        $message = $consumer->consume(10000);
+        $message = $consumer->consume();
     } catch (KafkaConsumerTimeoutException|KafkaConsumerEndOfPartitionException $e) {
         echo 'Didn\'t receive any messages, waiting for more...' . PHP_EOL;
         continue;

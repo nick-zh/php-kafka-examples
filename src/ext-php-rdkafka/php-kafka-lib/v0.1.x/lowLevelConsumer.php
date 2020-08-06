@@ -2,7 +2,7 @@
 
 // DISCLAIMER: For most intent and purposes it is easier and more flexible to use the high level consumer
 
-require_once('../../../vendor/autoload.php');
+require_once('../../../../vendor/autoload.php');
 
 use Jobcloud\Kafka\Consumer\KafkaConsumerBuilder;
 use Jobcloud\Kafka\Exception\KafkaConsumerConsumeException;
@@ -37,6 +37,7 @@ $consumer = $builder->withAdditionalConfig(
     ]
 )
     ->withAdditionalBroker('kafka:9096')
+    ->withTimeout(10000)
     ->withConsumerGroup('php-kafka-lib-low-level-consumer')
     ->withConsumerType(KafkaConsumerBuilder::CONSUMER_TYPE_LOW_LEVEL)
     ->withSubscription(
@@ -49,7 +50,7 @@ $consumer->subscribe();
 
 while (true) {
     try {
-        $message = $consumer->consume(10000);
+        $message = $consumer->consume();
     } catch (KafkaConsumerTimeoutException|KafkaConsumerEndOfPartitionException $e) {
         echo 'Didn\'t receive any messages, waiting for more...' . PHP_EOL;
         continue;
