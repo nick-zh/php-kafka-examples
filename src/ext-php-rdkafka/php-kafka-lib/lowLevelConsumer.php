@@ -18,6 +18,8 @@ $consumer = $builder->withAdditionalConfig(
         // start at the very beginning of the topic when reading for the first time
         'auto.offset.reset' => 'earliest',
 
+        // control how fast a commited offset will be synced to the broker
+        //'auto.commit.interval.ms' => 100,
         // will be visible in broker logs
         'client.id' => 'php-kafka-lib-low-level-consumer',
 
@@ -50,6 +52,7 @@ while (true) {
     try {
         $message = $consumer->consume();
     } catch (KafkaConsumerTimeoutException|KafkaConsumerEndOfPartitionException $e) {
+        echo 'Didn\'t receive any messages, waiting for more...' . PHP_EOL;
         continue;
     } catch (KafkaConsumerConsumeException $e) {
         echo $e->getMessage() . PHP_EOL;

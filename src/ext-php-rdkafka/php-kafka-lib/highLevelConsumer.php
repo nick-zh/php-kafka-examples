@@ -44,6 +44,7 @@ while (true) {
     try {
         $message = $consumer->consume();
     } catch (KafkaConsumerTimeoutException|KafkaConsumerEndOfPartitionException $e) {
+        echo 'Didn\'t receive any messages, waiting for more...' . PHP_EOL;
         continue;
     } catch (KafkaConsumerConsumeException $e) {
         echo $e->getMessage() . PHP_EOL;
