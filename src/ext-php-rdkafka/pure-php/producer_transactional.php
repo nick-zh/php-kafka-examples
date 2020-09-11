@@ -35,10 +35,9 @@ function echoTransactionError(KafkaErrorException $e) {
 
     echo 'Was unable to initialize the transactional producer' . PHP_EOL;
 
-    echo sprintf('The reason was: %s, this error %s, %s, %s', $e->getMessage(), $fatalString, $retryString, $abortString) . PHP_EOL;
+    echo sprintf('The reason was: %s, this error %d, %s, %s, %s', $e->getMessage(), $e->getCode(), $fatalString, $retryString, $abortString) . PHP_EOL;
     echo sprintf('In detail this means %s', $e->getErrorString()) . PHP_EOL;
     echo sprintf('Trace is %s', $e->getTraceAsString()) . PHP_EOL;
-
 }
 
 $conf = new Conf();
