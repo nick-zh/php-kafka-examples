@@ -2,8 +2,6 @@
 
 // DISCLAIMER: For most intent and purposes it is easier and more flexible to use the high level consumer
 
-require_once('../../../vendor/autoload.php');
-
 use RdKafka\Conf;
 use RdKafka\Consumer;
 use RdKafka\TopicConf;
